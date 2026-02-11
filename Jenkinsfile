@@ -6,6 +6,12 @@ pipeline {
         maven 'Maven3'
     }
 
+    environment {
+        SPRING_DATASOURCE_URL = 'jdbc:mysql://localhost:3306/hotelbooking'
+        SPRING_DATASOURCE_USERNAME = 'root'
+        SPRING_DATASOURCE_PASSWORD = ''
+    }
+
     options {
         timestamps()
         skipDefaultCheckout(true)
