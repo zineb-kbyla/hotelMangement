@@ -28,7 +28,7 @@ pipeline {
             steps {
                 dir('backend/HotelBookingApplication') {
                     // Use Maven Wrapper to avoid local Maven mismatch
-                    bat 'mvnw.cmd clean test'
+                    bat "mvnw.cmd clean test -Dspring.datasource.url=${SPRING_DATASOURCE_URL} -Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME} -Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}"
                 }
             }
             post {
