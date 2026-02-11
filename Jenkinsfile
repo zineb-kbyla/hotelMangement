@@ -18,11 +18,23 @@ pipeline {
             }
         }
 
+        stage('Docker - Start MySQL') {
+            steps {
+                script {
+                    // Démarrer uniquement le service MySQL pour les tests
+                    bat 'docker compose up -d db'
+                    // Attendre que MySQL soit prêt
+                    bat 'timeout /t 20 /nobreak'
+                    echo 'MySQL Docker container started'
+                }
+            }
+        }
+
         stage('Backend - Build & Test') {
             steps {
                 dir('backend/HotelBookingApplication') {
-                    // Use Maven Wrapper to avoid local Maven mismatch
-                    bat 'mvnw.cmd clean test -Dspring.datasource.url=jdbc:mysql://localhost:3306/hotelbooking -Dspring.datasource.username=root -Dspring.datasource.password='
+                    // Tests avec MySQL Docker (port 3306, user root, password root)
+                    bat 'mvnw.cmd clean test -Dspring.datasource.url=jdbc:mysql://localhost:3306/hotelbooking -Dspring.datasource.username=root -Dspring.datasource.password=root'
                 }
             }
             post {
@@ -49,14 +61,18 @@ pipeline {
     }
 
     post {
+        always {
+            script {
+                // Arrêter et nettoyer les conteneurs Docker
+                bat 'docker compose down || exit 0'
+            }
+            cleanWs()
+        }
         success {
-            echo 'Build completed successfully.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
             echo 'Build failed. Check logs.'
-        }
-        cleanup {
-            cleanWs()
         }
     }
 }
