@@ -25,8 +25,8 @@ pipeline {
                     bat 'docker compose down || exit 0'
                     // Démarrer uniquement le service MySQL pour les tests
                     bat 'docker compose up -d db'
-                    // Attendre que MySQL soit prêt
-                    bat 'timeout /t 20 /nobreak'
+                    // Attendre que MySQL soit prêt (20 secondes)
+                    bat 'powershell -Command "Start-Sleep -Seconds 20"'
                     echo 'MySQL Docker container started'
                 }
             }
