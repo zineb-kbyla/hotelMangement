@@ -37,8 +37,8 @@ pipeline {
         stage('Backend - Build & Test') {
             steps {
                 dir('backend/HotelBookingApplication') {
-                    // Tests avec MySQL Docker (port 3306, user root, password root)
-                    bat 'mvnw.cmd clean test -Dspring.datasource.url=jdbc:mysql://localhost:3306/hotelbooking -Dspring.datasource.username=root -Dspring.datasource.password=root'
+                    // Tests avec MySQL Docker (port 3307, user root, password root)
+                    bat 'mvnw.cmd clean test -Dspring.datasource.url=jdbc:mysql://localhost:3307/hotelbooking -Dspring.datasource.username=root -Dspring.datasource.password=root'
                 }
             }
             post {
