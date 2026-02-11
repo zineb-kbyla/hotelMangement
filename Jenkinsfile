@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK17'
+        jdk 'jdk-21'
         maven 'Maven3'
-        nodejs 'Node18'
     }
 
     options {
