@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: hotelbooking-db
+    environment:
+      MYSQL_DATABASE: hotelbooking
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend/HotelBookingApplication
+      dockerfile: Dockerfile
+    container_name: hotelbooking-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/hotelbooking
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8083:8083"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/Hotel-booking-application
+      dockerfile: Dockerfile
+    container_name: hotelbooking-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
