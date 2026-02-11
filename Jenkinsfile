@@ -25,9 +25,11 @@ pipeline {
                     bat 'docker compose down || exit 0'
                     // Démarrer uniquement le service MySQL pour les tests
                     bat 'docker compose up -d db'
-                    // Attendre que MySQL soit prêt (20 secondes)
-                    bat 'powershell -Command "Start-Sleep -Seconds 20"'
-                    echo 'MySQL Docker container started'
+                    // Attendre que MySQL soit vraiment prêt (vérification avec retry)
+                    bat '''
+                        powershell -Command "$retries = 0; $maxRetries = 30; while ($retries -lt $maxRetries) { try { docker exec hotelbooking-db mysql -uroot -proot -e 'SELECT 1' > $null 2>&1; if ($LASTEXITCODE -eq 0) { Write-Host 'MySQL is ready'; break } } catch {} $retries++; Start-Sleep -Seconds 2; if ($retries -eq $maxRetries) { Write-Host 'MySQL failed to start'; exit 1 } }"
+                    '''
+                    echo 'MySQL Docker container is ready'
                 }
             }
         }
