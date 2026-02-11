@@ -21,6 +21,8 @@ pipeline {
         stage('Docker - Start MySQL') {
             steps {
                 script {
+                    // Nettoyer les conteneurs existants
+                    bat 'docker compose down || exit 0'
                     // Démarrer uniquement le service MySQL pour les tests
                     bat 'docker compose up -d db'
                     // Attendre que MySQL soit prêt
